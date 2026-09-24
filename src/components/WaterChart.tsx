@@ -5,7 +5,9 @@ type ChartKind = "flow" | "quality" | "bars" | "radar" | "donut" | "energy" | "a
 
 const hours = ["00:00", "04:00", "08:00", "12:00", "16:00", "20:00", "24:00"];
 
-function makeOption(kind: ChartKind, colors: string[]): EChartsOption {
+type ChartPalette = [string, string, string, string, string, string, string, string, string, string, string];
+
+function makeOption(kind: ChartKind, colors: ChartPalette): EChartsOption {
   const axis = { axisLine: { lineStyle: { color: colors[5] } }, axisLabel: { color: colors[6], fontSize: 10 }, splitLine: { lineStyle: { color: colors[7] } } };
   const tooltip = { trigger: "axis" as const, backgroundColor: colors[8], borderColor: colors[0], textStyle: { color: colors[4] } };
   if (kind === "flow" || kind === "quality" || kind === "energy") {
@@ -19,7 +21,7 @@ function makeOption(kind: ChartKind, colors: string[]): EChartsOption {
       legend: { top: 10, right: 8, textStyle: { color: colors[4] }, itemWidth: 14 },
       grid: { left: 42, right: 18, top: 52, bottom: 28 },
       xAxis: { type: "category", data: hours, boundaryGap: false, ...axis }, yAxis: { type: "value", ...axis },
-      series: configs.names.map((name, i) => ({ name, type: "line", smooth: true, symbol: "circle", symbolSize: 6, data: i === 0 ? configs.a : i === 1 ? configs.b : configs.c, lineStyle: { width: 3 }, areaStyle: { opacity: i === 0 ? 0.18 : 0.04 } })),
+      series: configs.names.map((name, i) => ({ name, type: "line", smooth: true, symbol: "circle", symbolSize: 6, data: i === 0 ? configs.a : i === 1 ? configs.b : ("c" in configs ? configs.c : []), lineStyle: { width: 3 }, areaStyle: { opacity: i === 0 ? 0.18 : 0.04 } })),
     };
   }
   if (kind === "radar") return { color: colors.slice(0, 3), tooltip: {}, radar: { radius: "64%", indicator: ["COD", "BOD₅", "氨氮", "总氮", "总磷", "SS"].map(name => ({ name, max: 100 })), axisName: { color: colors[4] }, splitLine: { lineStyle: { color: colors[7] } }, splitArea: { areaStyle: { color: [colors[9], colors[10]] } } }, series: [{ type: "radar", data: [{ value: [83, 75, 92, 69, 88, 78], name: "处理能力", areaStyle: { opacity: .3 } }, { value: [65, 68, 70, 82, 74, 68], name: "设计基准", areaStyle: { opacity: .12 } }] }] };
@@ -40,7 +42,7 @@ export function WaterChart({ kind, className = "h-64" }: { kind: ChartKind; clas
       if (disposed) return;
       const s = getComputedStyle(document.documentElement);
       const get = (name: string) => s.getPropertyValue(name).trim();
-      const colors = ["--chart-cyan", "--chart-lime", "--chart-gold", "--chart-blue", "--chart-text", "--chart-axis", "--chart-label", "--chart-grid", "--chart-tooltip", "--chart-radar-a", "--chart-radar-b"].map(get);
+      const colors = ["--chart-cyan", "--chart-lime", "--chart-gold", "--chart-blue", "--chart-text", "--chart-axis", "--chart-label", "--chart-grid", "--chart-tooltip", "--chart-radar-a", "--chart-radar-b"].map(get) as ChartPalette;
       chart = echarts.init(el);
       chart.setOption(makeOption(kind, colors), true);
     });
