@@ -76,7 +76,7 @@ function Equipment() { return <div className="equipment-layout">
   <Card title="设备健康能力图" className="equipment-radar"><WaterChart kind="radar" className="chart-lg"/></Card>
   <Card title="在线设备矩阵" extra={<span className="tiny-label">236 / 241</span>} className="equipment-matrix"><div className="device-matrix">{Array.from({length:36},(_,i)=><span key={i} className={i===7||i===29?'warn':i===18?'off':''} title={`设备 ${i+1}`}/>)}</div><div className="matrix-key"><span><i/>运行</span><span><i className="warn"/>关注</span><span><i className="off"/>离线</span></div></Card>
   <Card title="维护作业排程" className="equipment-table"><DataTable rows={[['P-203提升泵','振动巡检','今日 14:30','待执行'],['BL-08鼓风机','润滑保养','明日 09:00','已排程'],['M-114搅拌机','电流检测','9月26日','已排程'],['UV-02消毒组','灯管清洁','9月28日','待确认']]} /></Card>
-  <Card title="设备工况摘要" className="equipment-status"><div className="status-stack">{[['泵类设备','48/49','98%'],['风机设备','12/12','100%'],['搅拌设备','34/35','97%'],['加药设备','28/29','96%']].map(x=><div key={x[0]}><span>{x[0]}</span><b>{x[1]}</b><progress value={parseInt(x[2])} max="100"/><em>{x[2]}</em></div>)}</div></Card>
+  <Card title="设备工况摘要" className="equipment-status"><div className="status-stack">{[['泵类设备','48/49',98],['风机设备','12/12',100],['搅拌设备','34/35',97],['加药设备','28/29',96] as const].map(([name, count, rate])=><div key={name}><span>{name}</span><b>{count}</b><progress value={rate} max="100"/><em>{rate}%</em></div>)}</div></Card>
 </div>; }
 
 function Alerts() { return <div className="alert-layout">
