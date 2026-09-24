@@ -1,5 +1,4 @@
 import { useEffect, useRef } from "react";
-import type { EChartsOption } from "echarts";
 
 type ChartKind = "flow" | "quality" | "bars" | "radar" | "donut" | "energy" | "alerts";
 
@@ -7,7 +6,7 @@ const hours = ["00:00", "04:00", "08:00", "12:00", "16:00", "20:00", "24:00"];
 
 type ChartPalette = [string, string, string, string, string, string, string, string, string, string, string];
 
-function makeOption(kind: ChartKind, colors: ChartPalette): EChartsOption {
+function makeOption(kind: ChartKind, colors: ChartPalette): Record<string, unknown> {
   const axis = { axisLine: { lineStyle: { color: colors[5] } }, axisLabel: { color: colors[6], fontSize: 10 }, splitLine: { lineStyle: { color: colors[7] } } };
   const tooltip = { trigger: "axis" as const, backgroundColor: colors[8], borderColor: colors[0], textStyle: { color: colors[4] } };
   if (kind === "flow" || kind === "quality" || kind === "energy") {
